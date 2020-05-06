@@ -121,6 +121,7 @@
 			let pendingUpdate = false;
 
 			function viewportHandler(event) {
+				console.log("viewPortHandler");
 				if (pendingUpdate) return;
 				pendingUpdate = true;
 
@@ -139,6 +140,7 @@
 
 					// You could also do this by setting style.left and style.top if you
 					// use width: 100% instead.
+					let bottomBar = document.getElementById("toolbar");
 					bottomBar.style.transform =
 						"translate(" +
 						offsetLeft +
