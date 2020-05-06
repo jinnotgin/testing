@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://www.quirksmode.org/m/tests/devicefixed.html? -->
+<html>
+	<script type="text/javascript">
+		window["_gaUserPrefs"] = {
+			ioo: function () {
+				return true;
+			},
+		};
+	</script>
+	<script
+		type="text/javascript"
+		src="chrome-extension://kajfghlhfkcocafkcjlajldicbikpgnp/catcher.js"
+	>
+		<!-- script injected by Request Maker -->
+	</script>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=windows-1252" />
+		<title>position: device-fixed</title>
+		<style>
+			#test {
+				position: absolute;
+				background-color: #9198c1;
+				color: white;
+				font-size: 60px;
+				width: 100%;
+				border-radius: 20px;
+				opacity: 0.7;
+				padding: 10px;
+				box-sizing: border-box;
+			}
+			textarea {
+				height: 300px;
+			}
+		</style>
+
+		<script>
+			var el;
+
+			window.onresize = window.onscroll = function () {
+				var lowerleft = [
+					window.pageXOffset,
+					window.pageYOffset + window.innerHeight,
+				];
+				var lowerright = [lowerleft[0] + window.innerWidth, lowerleft[1]];
+				var zoomFactor =
+					window.innerWidth / document.documentElement.clientWidth;
+
+				el.style.width = lowerright[0] - lowerleft[0] + "px";
+				el.style.height = parseInt(window.innerHeight / 10) + "px";
+				el.style.left = lowerleft[0] + "px";
+				el.style.top = lowerleft[1] - el.offsetHeight + "px";
+				el.style.fontSize = parseInt(zoomFactor * 60) + "px";
+			};
+
+			window.onload = function () {
+				el = document.getElementById("test");
+				//	fontAdjustment = 60/document.documentElement.clientWidth;
+				window.onresize();
+			};
+		</script>
+
+		<style data-styled="" data-styled-version="4.2.0"></style>
+	</head>
+
+	<body>
+		<div
+			id="test"
+			style="
+				width: 1650px;
+				height: 81px;
+				left: 0px;
+				top: 1243px;
+				font-size: 60px;
+			"
+		>
+			device-fixed layer with bottom: 0
+		</div>
+
+		<h1>
+			This example of <code>position: device-fixed</code> works only in Safari
+			iPhone and BlackBerry WebKit
+		</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<textarea></textarea>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<textarea></textarea>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<textarea></textarea>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<textarea></textarea>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Normal text</h1>
+		<h1>Last header</h1>
+	</body>
+</html>
