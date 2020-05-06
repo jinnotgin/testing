@@ -1,159 +1,169 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta charset="UTF-8" />
-		<meta
-			name="viewport"
-			content="width=device-width, initial-scale=1, shrink-to-fit=no"
-		/>
-		<title>Student Learning Space</title>
-		<style>
-			body {
-				margin: 0;
-			}
-			.content {
-				padding: 1.5rem 2rem;
-				margin: auto;
-				max-width: 800px;
-				font-family: sans-serif;
-			}
-			.rich-text-editor {
-				border: 1px solid #ddd;
-				min-height: 160px;
-				padding: 0 16px;
-			}
-			.rich-text-editor::before {
-				top: 16px !important;
-				left: 16px !important;
-			}
-			.rich-text-editor p {
-				margin-top: 16px;
-				margin-bottom: 16px;
-			}
-			.rich-text-toolbar {
-				position: fixed;
-				bottom: 0;
-				right: 0;
-				left: 0;
-			}
-		</style>
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<meta
+					name="viewport"
+					content="width=device-width, initial-scale=1, shrink-to-fit=no"
+				/>
+				<style>
+					#layoutViewport {
+						position: fixed;
+						width: 100%;
+						height: 100%;
+						visibility: hidden;
+					}
+					#bottombar {
+						position: fixed;
+						left: 0px;
+						right: 0px;
+						bottom: 0px;
+						background-color: red;
+						transform-origin: left bottom;
+						transform: translate(0px, 0px) scale(1);
+						z-index: 999;
+					}
+					#content {
+						padding: 1.5rem 2rem;
+						margin: auto;
+						max-width: 800px;
+						font-family: sans-serif;
+					}
+					.rich-text-editor {
+						border: 1px solid #ddd;
+						height: 20vh;
+						min-height: 80px;
+						max-height: 160px;
+						padding: 0 16px;
+					}
+					.rich-text-editor::before {
+						top: 16px !important;
+						left: 16px !important;
+					}
+					.rich-text-editor p {
+						margin-top: 16px;
+						margin-bottom: 16px;
+					}
+				</style>
+			</head>
+
+			<body>
+				<div id="bottombar">
+					<div id="toolbar" class="rich-text-toolbar"></div>
+				</div>
+				<div id="content">
+					<h1>With Visual Viewport API</h1>
+					<a
+						href="https://developer.mozilla.org/en-US/docs/Web/API/Visual_Viewport_API"
+						>https://developer.mozilla.org/en-US/docs/Web/API/Visual_Viewport_API</a
+					>
+					<section>
+						<h1>Question</h1>
+						<p>
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+							commodo ligula eget dolor. Aenean massa. Cum sociis natoque
+							penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+							Donec quam felis, ultricies nec, pellentesque eu, pretium quis,
+							sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
+							vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
+							imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
+							mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
+							semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
+							porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem
+							ante, dapibus in, viverra quis, feugiat a, tellus.
+						</p>
+						<div class="rich-text-editor"></div>
+					</section>
+					<br />
+					<section>
+						<h1>Question</h1>
+						<p>
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+							commodo ligula eget dolor. Aenean massa. Cum sociis natoque
+							penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+							Donec quam felis, ultricies nec, pellentesque eu, pretium quis,
+							sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
+							vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
+							imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
+							mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
+							semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
+							porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem
+							ante, dapibus in, viverra quis, feugiat a, tellus.
+						</p>
+						<div class="rich-text-editor"></div>
+					</section>
+					<br />
+					<section>
+						<h1>Question</h1>
+						<p>
+							Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
+							commodo ligula eget dolor. Aenean massa. Cum sociis natoque
+							penatibus et magnis dis parturient montes, nascetur ridiculus mus.
+							Donec quam felis, ultricies nec, pellentesque eu, pretium quis,
+							sem. Nulla consequat massa quis enim. Donec pede justo, fringilla
+							vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
+							imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
+							mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
+							semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
+							porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem
+							ante, dapibus in, viverra quis, feugiat a, tellus.
+						</p>
+						<div class="rich-text-editor"></div>
+					</section>
+				</div>
+				<div id="layoutViewport"></div>
+
+				<script
+					src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.2/tinymce.min.js"
+					referrerpolicy="origin"
+				></script>
+				<script>
+					tinymce.init({
+						selector: ".rich-text-editor",
+						plugins: [
+							"autolink noneditable paste textcolor advlist lists table image link media",
+						],
+						menubar: false,
+						inline: true,
+						fixed_toolbar_container: "#toolbar",
+						toolbar_mode: "scrolling",
+						toolbar:
+							"undo redo | bold italic underline strikethrough | forecolor backcolor | fontselect formatselect | numlist bullist | table image link media | pastetext",
+						placeholder: "Enter your answer here...",
+					});
+				</script>
+				<script>
+					var bottomBar = document.getElementById("bottombar");
+					var viewport = window.visualViewport;
+					function viewportHandler() {
+						var layoutViewport = document.getElementById("layoutViewport");
+
+						// Since the bar is position: fixed we need to offset it by the visual
+						// viewport's offset from the layout viewport origin.
+						var offsetX = viewport.offsetLeft;
+						var offsetY =
+							viewport.height -
+							layoutViewport.getBoundingClientRect().height +
+							viewport.offsetTop;
+
+						// You could also do this by setting style.left and style.top if you
+						// use width: 100% instead.
+						bottomBar.style.transform =
+							"translate(" +
+							offsetX +
+							"px," +
+							offsetY +
+							"px) " +
+							"scale(" +
+							1 / viewport.scale +
+							")";
+					}
+					window.visualViewport.addEventListener("scroll", viewportHandler);
+					window.visualViewport.addEventListener("resize", viewportHandler);
+				</script>
+			</body>
+		</html>
 	</head>
-	<body>
-		<div id="layoutViewport">
-			<div class="content">
-				<h1>With viewPortHandler 3</h1>
-				<section>
-					<h1>Question</h1>
-					<p>
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-						commodo ligula eget dolor. Aenean massa. Cum sociis natoque
-						penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-						Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-						Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
-						aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
-						imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-						mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
-						semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
-						porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem
-						ante, dapibus in, viverra quis, feugiat a, tellus.
-					</p>
-					<div class="rich-text-editor"></div>
-				</section>
-				<br />
-				<section>
-					<h1>Question</h1>
-					<p>
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-						commodo ligula eget dolor. Aenean massa. Cum sociis natoque
-						penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-						Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-						Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
-						aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
-						imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-						mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
-						semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
-						porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem
-						ante, dapibus in, viverra quis, feugiat a, tellus.
-					</p>
-					<div class="rich-text-editor"></div>
-				</section>
-				<br />
-				<section>
-					<h1>Question</h1>
-					<p>
-						Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-						commodo ligula eget dolor. Aenean massa. Cum sociis natoque
-						penatibus et magnis dis parturient montes, nascetur ridiculus mus.
-						Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem.
-						Nulla consequat massa quis enim. Donec pede justo, fringilla vel,
-						aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut,
-						imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede
-						mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum
-						semper nisi. Aenean vulputate eleifend tellus. Aenean leo ligula,
-						porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem
-						ante, dapibus in, viverra quis, feugiat a, tellus.
-					</p>
-					<div class="rich-text-editor"></div>
-				</section>
-			</div>
-			<div id="toolbar" class="rich-text-toolbar"></div>
-		</div>
-		<script
-			src="https://cdnjs.cloudflare.com/ajax/libs/tinymce/5.2.2/tinymce.min.js"
-			referrerpolicy="origin"
-		></script>
-		<script>
-			tinymce.init({
-				selector: ".rich-text-editor",
-				plugins: [
-					"autolink noneditable paste textcolor advlist lists table image link media",
-				],
-				menubar: false,
-				inline: true,
-				fixed_toolbar_container: "#toolbar",
-				toolbar_mode: "scrolling",
-				toolbar:
-					"undo redo | bold italic underline strikethrough | forecolor backcolor | fontselect formatselect | numlist bullist | table image link media | pastetext",
-				placeholder: "Enter your answer here...",
-			});
-
-			let pendingUpdate = false;
-
-			function viewportHandler(event) {
-				console.log("viewPortHandler");
-				if (pendingUpdate) return;
-				pendingUpdate = true;
-
-				requestAnimationFrame(() => {
-					pendingUpdate = false;
-					var layoutViewport = document.getElementById("layoutViewport");
-
-					// Since the bar is position: fixed we need to offset it by the
-					// visual viewport's offset from the layout viewport origin.
-					var viewport = event.target;
-					var offsetLeft = viewport.offsetLeft;
-					var offsetTop =
-						viewport.height -
-						layoutViewport.getBoundingClientRect().height +
-						viewport.offsetTop;
-
-					// You could also do this by setting style.left and style.top if you
-					// use width: 100% instead.
-					let bottomBar = document.getElementById("toolbar");
-					bottomBar.style.transform =
-						"translate(" +
-						offsetLeft +
-						"px," +
-						offsetTop +
-						"px) " +
-						"scale(" +
-						1 / viewport.scale +
-						")";
-				});
-			}
-
-			window.visualViewport.addEventListener("scroll", viewportHandler);
-			window.visualViewport.addEventListener("resize", viewportHandler);
-		</script>
-	</body>
 </html>
