@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)https://wicg.github.io/visual-viewport/examples/fixed-to-viewport.html -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<style>
+			#layoutViewport {
+				position: fixed;
+				width: 100%;
+				height: 100%;
+				visibility: hidden;
+			}
+			#bottombar {
+				position: fixed;
+				left: 0px;
+				right: 0px;
+				bottom: 0px;
+				background-color: red;
+				transform-origin: left bottom;
+				transform: translate(0px, 0px) scale(1);
+			}
+			#forcescrolling {
+				width: 500px;
+				height: 2000px;
+				background-color: green;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="bottombar" style="transform: translate(0px, 0px) scale(1);">
+			This stays stuck to the visual viewport
+		</div>
+		<div id="forcescrolling"></div>
+		<div id="layoutViewport"></div>
+
+		<script>
+			var forcescrolling = document.getElementById("forcescrolling");
+			forcescrolling.innerHTML = "A quick brown fox jumped over the lazy dog.<br><br>".repeat(
+				50
+			);
+
+			var bottomBar = document.getElementById("bottombar");
+			var viewport = window.visualViewport;
+			function viewportHandler() {
+				var layoutViewport = document.getElementById("layoutViewport");
+
+				// Since the bar is position: fixed we need to offset it by the visual
+				// viewport's offset from the layout viewport origin.
+				var offsetX = viewport.offsetLeft;
+				var offsetY =
+					viewport.height -
+					layoutViewport.getBoundingClientRect().height +
+					viewport.offsetTop;
+
+				// You could also do this by setting style.left and style.top if you
+				// use width: 100% instead.
+				bottomBar.style.transform =
+					"translate(" +
+					offsetX +
+					"px," +
+					offsetY +
+					"px) " +
+					"scale(" +
+					1 / viewport.scale +
+					")";
+			}
+			window.visualViewport.addEventListener("scroll", viewportHandler);
+			window.visualViewport.addEventListener("resize", viewportHandler);
+		</script>
+	</body>
+</html>
