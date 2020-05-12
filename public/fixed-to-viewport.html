@@ -24,6 +24,13 @@
 				width: 500px;
 				height: 2000px;
 				background-color: green;
+				color: white;
+			}
+			#forcescrolling2 {
+				width: 500px;
+				height: 2000px;
+				background-color: blue;
+				color: white;
 			}
 		</style>
 	</head>
@@ -37,7 +44,11 @@
 
 		<script>
 			var forcescrolling = document.getElementById("forcescrolling");
+			var forcescrolling2 = document.getElementById("forcescrolling2");
 			forcescrolling.innerHTML = "A quick brown fox jumped over the lazy dog.<br><br>".repeat(
+				50
+			);
+			forcescrolling2.innerHTML = "This wouldnt trip the google touch search.<br><br>".repeat(
 				50
 			);
 
