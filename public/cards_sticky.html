@@ -263,7 +263,9 @@
 				</div>
 			</div>
 		</div>
+		<script src="https://unpkg.com/smoothscroll-polyfill/dist/smoothscroll.min.js" />
 		<script>
+			window.__forceSmoothScrollPolyfill__ = true;
 			[...document.querySelectorAll(".card")].map((item) => {
 				item.onclick = () => {
 					const target_id = item.id.replace("note", "");
@@ -278,6 +280,5 @@
 				};
 			});
 		</script>
-		<script src="https://unpkg.com/smoothscroll-polyfill/dist/smoothscroll.min.js" />
 	</body>
 </html>
