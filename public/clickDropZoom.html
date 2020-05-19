@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>ClickDropZoomWoosh</title>
+		<style>
+			body {
+				margin: 0;
+				padding: 0;
+				user-select: none;
+			}
+			#site {
+				display: flex;
+				min-height: 100vh;
+				flex-direction: column;
+			}
+			#bottomDrawer {
+				position: fixed;
+				bottom: 0;
+				width: 100vw;
+				display: flex;
+				background-color: rgb(240, 240, 240, 0.75);
+				padding: 1em 1em;
+				display: none;
+			}
+			.option {
+				min-height: 164px;
+				min-width: 164px;
+				background-color: lightsteelblue;
+				margin: 0 0.5em;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition-property: all;
+				transition: all 0.1s ease-in-out;
+			}
+			.option,
+			.option img {
+				border-radius: 10%;
+			}
+			.option:hover {
+				transform: translate(0, -10px);
+				-webkit-box-shadow: 3px 3px 5px 2px #ccc; /* Safari 3-4, iOS 4.0.2 - 4.2, Android 2.3+ */
+				-moz-box-shadow: 3px 3px 5px 2px #ccc; /* Firefox 3.5 - 3.6 */
+				box-shadow: 3px 3px 5px 2px #ccc;
+			}
+			#content {
+				width: 80vw;
+				margin: 0 auto;
+			}
+			#pinchContainer {
+				min-width: 100%;
+				height: 65vh;
+				border: 12px solid rgb(200, 200, 200);
+				overflow: hidden;
+			}
+			#gestureArea,
+			#scaleElement {
+				height: 100%;
+				width: 100%;
+			}
+
+			#gestureArea {
+				transform: translate(0px, 0px);
+			}
+
+			.dropZone {
+				position: absolute;
+				background-color: lightsalmon;
+				min-width: 80px;
+				min-height: 80px;
+				border: 6px solid rgb(255, 255, 255, 0.6);
+				border-radius: 12%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition: all 0.15s ease-in-out;
+			}
+			.dropZone.active {
+				border-color: red;
+			}
+			#overlay {
+				position: absolute;
+				top: 0;
+				left: 0;
+				height: 100vh;
+				width: 100vw;
+				background-color: rgba(0, 0, 0, 0.15);
+				z-index: 5;
+				cursor: pointer;
+				display: none;
+			}
+			#modal {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 80vw;
+				height: 80vh;
+				padding: 4vh 4vh;
+				margin: 6vh 6vw;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				z-index: 10;
+				background-color: rgba(255, 255, 255, 1);
+			}
+			#modalImage {
+				max-width: 100%;
+				max-height: 100%;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="site">
+			<div id="content">
+				<div id="pinchContainer">
+					<div id="gestureArea">
+						<div id="scaleElement">
+							<div class="dropZone" style="transform: translate(25%, 50%);">
+								#1
+							</div>
+							<div class="dropZone" style="transform: translate(100%, 200%);">
+								#2
+							</div>
+							<div class="dropZone" style="transform: translate(175%, 350%);">
+								#3
+							</div>
+							<div class="dropZone" style="transform: translate(250%, 500%);">
+								#4
+							</div>
+							<div class="dropZone" style="transform: translate(500%, 500%);">
+								#5
+							</div>
+							<div class="dropZone" style="transform: translate(1000%, 1000%);">
+								#6
+							</div>
+							<div class="dropZone" style="transform: translate(1500%, 700%);">
+								#7
+							</div>
+							<img
+								src="https://farm3.staticflickr.com/2862/33107020324_fc53203958_k.jpg"
+							/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="bottomDrawer">
+			<div class="option">
+				<img src="https://picsum.photos/seed/1/140/140" />
+			</div>
+			<div class="option">
+				<img src="https://picsum.photos/seed/2/140/140" />
+			</div>
+			<div class="option">
+				<img src="https://picsum.photos/seed/3/140/140" />
+			</div>
+			<div class="option">
+				<img src="https://picsum.photos/seed/4/140/140" />
+			</div>
+			<div class="option">
+				<img src="https://picsum.photos/seed/5/140/140" />
+			</div>
+		</div>
+		<div id="overlay">
+			<div id="modal">
+				<img
+					id="modalImage"
+					src="https://farm3.staticflickr.com/2862/33107020324_fc53203958_k.jpg"
+				/>
+			</div>
+		</div>
+		<script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+		<script>
+			function dragMoveListener(event) {
+				var target = event.target;
+				// keep the dragged position in the data-x/data-y attributes
+				var x = (parseFloat(target.getAttribute("data-x")) || 0) + event.dx;
+				var y = (parseFloat(target.getAttribute("data-y")) || 0) + event.dy;
+
+				// translate the element
+				target.style.webkitTransform = target.style.transform =
+					"translate(" + x + "px, " + y + "px)";
+
+				// update the posiion attributes
+				target.setAttribute("data-x", x);
+				target.setAttribute("data-y", y);
+			}
+
+			var angleScale = {
+				angle: 0,
+				scale: 1,
+			};
+			var gestureArea = document.getElementById("gestureArea");
+			var scaleElement = document.getElementById("scaleElement");
+			var imageElement = scaleElement.querySelector("img");
+
+			var initial = {
+				scale: gestureArea.clientHeight / imageElement.clientHeight,
+			};
+			angleScale.scale = initial.scale;
+
+			// START of rubbish alignment code that doesn't work
+			initial.xOffset =
+				-(gestureArea.clientWidth - imageElement.clientWidth * initial.scale) /
+				2;
+			initial.yOffset =
+				-(
+					gestureArea.clientHeight -
+					imageElement.clientHeight * initial.scale
+				) / 2;
+			scaleElement.style.transform = `scale(${initial.scale})`;
+			gestureArea.style.transform = `translate(${initial.xOffset}px, ${initial.yOffset}px)`;
+			gestureArea.setAttribute("data-x", initial.xOffset);
+			gestureArea.setAttribute("data-y", initial.yOffset);
+			// END of rubbish alignment code that doesn't work
+
+			interact(gestureArea)
+				.gesturable({
+					listeners: {
+						start(event) {
+							angleScale.angle -= event.angle;
+						},
+						move(event) {
+							var currentScale = event.scale * angleScale.scale;
+
+							scaleElement.style.webkitTransform = scaleElement.style.transform =
+								"scale(" + currentScale + ")";
+
+							// uses the dragMoveListener from the draggable demo above
+							dragMoveListener(event);
+						},
+						end(event) {
+							angleScale.scale = angleScale.scale * event.scale;
+						},
+					},
+				})
+				.draggable({
+					listeners: { move: dragMoveListener },
+				});
+
+			const bottomDrawer = document.getElementById("bottomDrawer");
+			const dropZones = [...document.querySelectorAll(".dropZone")];
+			dropZones.map((item) => {
+				item.onclick = (event) => {
+					const { target } = event;
+					console.log("clicked", target);
+
+					const toActive = !target.classList.contains("active");
+
+					dropZones.map((item) => item.classList.remove("active"));
+					bottomDrawer.style.display = "none";
+					if (toActive) {
+						target.classList.add("active");
+						bottomDrawer.style.display = "flex";
+					}
+				};
+			});
+			const options = [...document.querySelectorAll(".option")];
+			const getImageSrc = (target) => {
+				if (target.tagName !== "IMG") target = target.querySelector("img");
+				if (target === null) return false;
+				const imageUrl = target.src;
+				return imageUrl;
+			};
+			const dropZoneShowImage = (target) => {
+				const imageUrl = getImageSrc(target);
+
+				const targetDropZone = document.querySelector(".dropZone.active");
+				if (targetDropZone === null) return false;
+
+				targetDropZone.style.backgroundImage = `url("${imageUrl}")`;
+			};
+			// options.map((item) => {
+			// 	item.onclick = (event) => {
+			// 		let { target } = event;
+			// 		dropZoneShowImage(target);
+			// 	};
+			// });
+
+			var isDown = false,
+				isLong = false,
+				clickTarget, // which element was clicked
+				longTID;
+			options.map((item) =>
+				item.addEventListener("mousedown", handleMouseDown)
+			);
+			window.addEventListener("mouseup", handleMouseUp);
+			function handleMouseDown() {
+				isDown = true; // button status (any button here)
+				isLong = false; // longpress status reset
+				clickTarget = this; // store this as target element
+				clearTimeout(longTID); // clear any running timers
+				longTID = setTimeout(longPress.bind(this), 500); // create a new timer for this click
+			}
+
+			function handleMouseUp(e) {
+				if (isDown && isLong) {
+					// if a long press, cancel
+					isDown = false; // clear in any case
+					e.preventDefault(); // and ignore this event
+					return;
+				}
+
+				if (isDown) {
+					// if we came from down status:
+					clearTimeout(longTID); // clear timer to avoid false longpress
+					console.log("mouseUp", clickTarget);
+					dropZoneShowImage(clickTarget);
+					isDown = false;
+					// target.innerHTML = "Normal up"; // for clicked element
+					clickTarget = null;
+				}
+			}
+
+			function longPress() {
+				isLong = true;
+				console.log(clickTarget);
+				// this.innerHTML = "Long press";
+				const imageUrl = getImageSrc(clickTarget);
+
+				// hardcoding ugly hack
+				const fullSize_imageUrl = imageUrl.replace(/140/g, "0");
+
+				document.getElementById("modalImage").src = fullSize_imageUrl;
+				document.getElementById("overlay").style.display = "block";
+
+				console.log("longPress", clickTarget);
+				// throw custom event or call code for long press
+			}
+
+			const overlay = document.getElementById("overlay");
+			overlay.onclick = () => {
+				overlay.style.display = "none";
+			};
+
+			function preloadImage(url) {
+				var img = new Image();
+				img.src = url;
+			}
+			options.map((item) => {
+				const imageUrl = getImageSrc(item);
+				const fullSize_imageUrl = imageUrl.replace(/140/g, "0");
+				const img = new Image();
+				img.src = fullSize_imageUrl;
+			});
+		</script>
+	</body>
+</html>
