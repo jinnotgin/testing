@@ -21,7 +21,7 @@
 				display: flex;
 				background-color: rgb(240, 240, 240, 0.75);
 				padding: 1em 1em;
-				display: none;
+				display: flex;
 				overflow-x: scroll;
 				transition: all 0.15s ease-in-out;
 			}
@@ -246,7 +246,6 @@
 				});
 
 			const bottomDrawer = document.getElementById("bottomDrawer");
-			bottomDrawer.style.display = "flex";
 			bottomDrawer.style.transform = `translate(0, ${bottomDrawer.clientHeight}px)`;
 
 			const dropZones = [...document.querySelectorAll(".dropZone")];
