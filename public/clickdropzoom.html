@@ -23,6 +23,7 @@
 				padding: 1em 1em;
 				display: none;
 				overflow-x: scroll;
+				transition: all 0.15s ease-in-out;
 			}
 			.option {
 				min-height: 164px;
@@ -245,6 +246,9 @@
 				});
 
 			const bottomDrawer = document.getElementById("bottomDrawer");
+			bottomDrawer.style.display = "flex";
+			bottomDrawer.style.transform = `translate(0, ${bottomDrawer.clientHeight}px)`;
+
 			const dropZones = [...document.querySelectorAll(".dropZone")];
 			dropZones.map((item) => {
 				item.onclick = (event) => {
@@ -254,10 +258,12 @@
 					const toActive = !target.classList.contains("active");
 
 					dropZones.map((item) => item.classList.remove("active"));
-					bottomDrawer.style.display = "none";
+					// bottomDrawer.style.display = "none";
+					bottomDrawer.style.transform = `translate(0, ${bottomDrawer.clientHeight}px)`;
 					if (toActive) {
 						target.classList.add("active");
-						bottomDrawer.style.display = "flex";
+						// bottomDrawer.style.display = "flex";
+						bottomDrawer.style.transform = `translate(0, 0)`;
 					}
 				};
 			});
