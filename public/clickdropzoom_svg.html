@@ -5,6 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<style>
+			button {
+				padding: 1em;
+			}
+
 			.pinchContainer {
 				touch-action: none;
 			}
@@ -66,23 +70,28 @@
 	</head>
 
 	<body>
+		<button id="zoom_in">+</button>
+		<button id="zoom_out">-</button>
+		<button id="zoom_reset">Reset</button>
+		<br />
+		<br />
 		<div id="bottomDrawer" class="collapsed">
 			<div class="toggle">Toggle Drawer</div>
 			<div class="optionContainer">
 				<div class="option">
-					<img src="https://picsum.photos/seed/1/400/120" />
+					<img src="https://picsum.photos/seed/1/280/120" />
 				</div>
 				<div class="option">
-					<img src="https://picsum.photos/seed/2/400/120" />
+					<img src="https://picsum.photos/seed/2/280/120" />
 				</div>
 				<div class="option">
-					<img src="https://picsum.photos/seed/3/400/120" />
+					<img src="https://picsum.photos/seed/3/280/120" />
 				</div>
 				<div class="option">
-					<img src="https://picsum.photos/seed/4/400/120" />
+					<img src="https://picsum.photos/seed/4/280/120" />
 				</div>
 				<div class="option">
-					<img src="https://picsum.photos/seed/5/400/120" />
+					<img src="https://picsum.photos/seed/5/280/120" />
 				</div>
 			</div>
 		</div>
@@ -126,6 +135,7 @@
 
 			// then we add the image in
 			const imgFullSize = {};
+			let zoom;
 			getImageSize(imgAddress).then((imgFullSize) => {
 				console.log({ imgFullSize });
 				// determine how much to downscale by, if needed (using maxScale)
@@ -178,7 +188,7 @@
 				});
 
 				// then, create the zoom behvavior
-				const zoom = d3
+				zoom = d3
 					.zoom()
 					// only scale up, e.g. between 1x and maxScale
 					.scaleExtent([1, maxScale])
@@ -206,8 +216,20 @@
 				// remember that if you call this on the <g> element, the even handlers
 				// will only trigger when the mouse or touch cursor intersects with the
 				// <g> elements' children!
-				svg.call(zoom);
+				svg.call(zoom).on("wheel.zoom", null);
 
+				// zoom in out reset buttons
+				d3.select("#zoom_in").on("click", function () {
+					zoom.scaleBy(svg.transition().duration(400), 1.5);
+				});
+				d3.select("#zoom_out").on("click", function () {
+					zoom.scaleBy(svg.transition().duration(400), 0.5);
+				});
+				d3.select("#zoom_reset").on("click", function () {
+					svg.transition().duration(750).call(zoom.transform, d3.zoomIdentity);
+				});
+
+				// dropzones onclick
 				const dropzones = [...document.querySelectorAll(".dropzone")];
 				dropzones.map((item) => {
 					item.onclick = (event) => {
@@ -226,11 +248,56 @@
 					};
 				});
 
+				// bottom drawer toogle onclick
 				document.querySelector("#bottomDrawer .toggle").onclick = (e) => {
 					const $bottomDrawer = document.getElementById("bottomDrawer");
 					$bottomDrawer.classList.toggle("collapsed");
 					dropzones.map((item) => item.classList.remove("active"));
 				};
+
+				// options onclick
+				const options = [...document.querySelectorAll(".option")];
+				const getOptionImageSrc = (target) => {
+					if (target.tagName !== "IMG") target = target.querySelector("img");
+					if (target === null) return false;
+					const imageUrl = target.src;
+					return imageUrl;
+				};
+				const dropZoneImage_onClickHandler = (e) => {
+					document
+						.getElementById(e.target.getAttribute("data-parentDropZoneId"))
+						.dispatchEvent(new Event("click"));
+				};
+				const dropZoneShowImage = (target) => {
+					const optionImageUrl = getOptionImageSrc(target);
+
+					const targetDropZone = document.querySelector(".dropZone.active");
+					if (targetDropZone === null) return false;
+
+					// remove existing option
+					const targetDropZone_id = targetDropZone.getAttribute("id");
+					const existing_dropZoneImage = document.querySelector(
+						`image[data-parentDropZoneId="${targetDropZone_id}"]`
+					);
+					if (existing_dropZoneImage !== null) existing_dropZoneImage.remove();
+
+					// add the option
+					const image = g
+						.append("svg:image")
+						.attr("xlink:href", optionImageUrl)
+						.attr("width", targetDropZone.getAttribute("width"))
+						.attr("height", targetDropZone.getAttribute("height"))
+						.attr("x", targetDropZone.getAttribute("x"))
+						.attr("y", targetDropZone.getAttribute("y"))
+						.attr("data-parentDropZoneId", targetDropZone_id);
+					image.node().onclick = dropZoneImage_onClickHandler;
+				};
+				options.map((item) => {
+					item.onclick = (event) => {
+						let { target } = event;
+						dropZoneShowImage(target);
+					};
+				});
 			});
 		</script>
 	</body>
