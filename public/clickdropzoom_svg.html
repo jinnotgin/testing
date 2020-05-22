@@ -2,6 +2,7 @@
 	<head>
 		<title>Restricted zoom behavior in d3</title>
 		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script src="https://d3js.org/d3.v5.min.js"></script>
 		<style>
 			.pinchContainer {
@@ -11,15 +12,84 @@
 				fill: lightsalmon;
 				stroke-width: 3;
 				stroke: rgb(255, 255, 255, 0.5);
+				cursor: pointer;
+			}
+			.dropzone.active {
+				stroke: red;
+			}
+			#bottomDrawer {
+				position: fixed;
+				bottom: 0;
+				height: 45vh;
+				width: 100vw;
+				background-color: rgb(230, 230, 230, 0.75);
+				transition: all 0.2s ease-in-out;
+			}
+			#bottomDrawer.collapsed {
+				height: 40px;
+			}
+			.optionContainer {
+				display: flex;
+				flex-direction: column;
+				overflow-x: scroll;
+				transition: all 0.15s ease-in-out;
+				width: 100%;
+				height: calc(100% - 25px);
+				align-items: center;
+			}
+			.option {
+				min-height: 140px;
+				min-width: 90vw;
+				max-width: 620px;
+				background-color: white;
+				margin: 0.5em;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition-property: all;
+				transition: all 0.1s ease-in-out;
+			}
+			.toggle {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0.5em 0;
+				padding: 0.25em 0;
+				font-weight: 700;
+				cursor: pointer;
+				user-select: none;
+				background-color: white;
+				width: 100%;
 			}
 		</style>
 	</head>
 
 	<body>
+		<div id="bottomDrawer" class="collapsed">
+			<div class="toggle">Toggle Drawer</div>
+			<div class="optionContainer">
+				<div class="option">
+					<img src="https://picsum.photos/seed/1/450/120" />
+				</div>
+				<div class="option">
+					<img src="https://picsum.photos/seed/2/450/120" />
+				</div>
+				<div class="option">
+					<img src="https://picsum.photos/seed/3/450/120" />
+				</div>
+				<div class="option">
+					<img src="https://picsum.photos/seed/4/450/120" />
+				</div>
+				<div class="option">
+					<img src="https://picsum.photos/seed/5/450/120" />
+				</div>
+			</div>
+		</div>
 		<script>
 			// first, define your viewport dimensions
 			const viewport = {
-				width: 960,
+				width: 0.95 * window.innerWidth,
 				height: 500,
 			};
 			const imgAddress =
@@ -137,6 +207,30 @@
 				// will only trigger when the mouse or touch cursor intersects with the
 				// <g> elements' children!
 				svg.call(zoom);
+
+				const dropzones = [...document.querySelectorAll(".dropzone")];
+				dropzones.map((item) => {
+					item.onclick = (event) => {
+						const { target } = event;
+						console.log("clicked", target);
+
+						const toActive = !target.classList.contains("active");
+
+						dropzones.map((item) => item.classList.remove("active"));
+						const $bottomDrawer = document.getElementById("bottomDrawer");
+						$bottomDrawer.classList.add("collapsed");
+						if (toActive) {
+							target.classList.add("active");
+							$bottomDrawer.classList.remove("collapsed");
+						}
+					};
+				});
+
+				document.querySelector("#bottomDrawer .toggle").onclick = (e) => {
+					const $bottomDrawer = document.getElementById("bottomDrawer");
+					$bottomDrawer.classList.toggle("collapsed");
+					dropzones.map((item) => item.classList.remove("active"));
+				};
 			});
 		</script>
 	</body>
