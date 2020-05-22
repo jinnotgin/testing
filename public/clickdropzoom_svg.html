@@ -1,0 +1,143 @@
+<html>
+	<head>
+		<title>Restricted zoom behavior in d3</title>
+		<meta charset="utf-8" />
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<style>
+			.pinchContainer {
+				touch-action: none;
+			}
+			.dropzone {
+				fill: lightsalmon;
+				stroke-width: 3;
+				stroke: rgb(255, 255, 255, 0.5);
+			}
+		</style>
+	</head>
+
+	<body>
+		<script>
+			// first, define your viewport dimensions
+			const viewport = {
+				width: 960,
+				height: 500,
+			};
+			const imgAddress =
+				"https://farm3.staticflickr.com/2862/33107020324_fc53203958_k.jpg";
+			const dropPoints = [
+				{ id: "point1", width: 0.125, height: 0.1, x: 0.1, y: 0.08 },
+				{ id: "point2", width: 0.125, height: 0.1, x: 0.4, y: 0.5 },
+				{ id: "point3", width: 0.125, height: 0.1, x: 0.65, y: 0.8 },
+				{ id: "point4", width: 0.125, height: 0.1, x: 0.1, y: 0.7 },
+				{ id: "point5", width: 0.125, height: 0.1, x: 0.8, y: 0.1 },
+			];
+
+			const getImageSize = (address) => {
+				return new Promise((resolve, reject) => {
+					let img = new Image();
+					img.onload = () => resolve({ height: img.height, width: img.width });
+					img.onerror = reject;
+					img.src = address;
+				});
+			};
+
+			// then, create your svg element and a <g> container
+			// for all of the transformed content
+			const svg = d3
+					.select("body")
+					.append("svg")
+					.attr("class", "pinchContainer")
+					.attr("width", viewport.width)
+					.attr("height", viewport.height)
+					// .style("background-color", randomColor),
+					.style("background-color", "rgb(255, 255, 255)")
+					.style("border", "solid 5px darkgrey"),
+				g = svg.append("g");
+
+			// then we add the image in
+			const imgFullSize = {};
+			getImageSize(imgAddress).then((imgFullSize) => {
+				console.log({ imgFullSize });
+				// determine how much to downscale by, if needed (using maxScale)
+				const possibleScales = {
+					x: imgFullSize.width / viewport.width,
+					y: imgFullSize.height / viewport.height,
+				};
+				const maxScale = Math.max(1, possibleScales.x, possibleScales.y);
+
+				// calculate intial offsets
+				const minScaleDirection =
+					possibleScales.x < possibleScales.y ? "x" : "y";
+				const initOffset = {
+					x:
+						minScaleDirection === "x"
+							? (viewport.width - imgFullSize.width / maxScale) / 2
+							: 0,
+					y:
+						minScaleDirection === "y"
+							? (viewport.height - imgFullSize.height / maxScale) / 2
+							: 0,
+				};
+
+				// calculate image's intial size
+				const initElementSize = {
+					width: imgFullSize.width / maxScale,
+					height: imgFullSize.height / maxScale,
+				};
+
+				const image = g
+					.append("svg:image")
+					.attr("xlink:href", imgAddress)
+					.attr("width", initElementSize.width)
+					.attr("height", initElementSize.height)
+					.attr("x", initOffset.x)
+					.attr("y", initOffset.y);
+
+				dropPoints.map((item) => {
+					const { id, width, height, x, y } = item;
+
+					const rect = g
+						.append("rect")
+						.attr("id", id)
+						.attr("rx", 5)
+						.attr("class", "dropzone")
+						.attr("width", width * initElementSize.width)
+						.attr("height", height * initElementSize.height)
+						.attr("x", initOffset.x + x * initElementSize.width)
+						.attr("y", initOffset.y + y * initElementSize.height);
+				});
+
+				// then, create the zoom behvavior
+				const zoom = d3
+					.zoom()
+					// only scale up, e.g. between 1x and maxScale
+					.scaleExtent([1, maxScale])
+					// set tranlsation boundaries
+					.translateExtent([
+						[initOffset.x, initOffset.y],
+						[viewport.width - initOffset.x, viewport.height - initOffset.y],
+					])
+					.on("zoom", function () {
+						// the "zoom" event populates d3.event with an object that has
+						// a "translate" property (a 2-element Array in the form [x, y])
+						// and a numeric "scale" property
+						const { transform } = d3.event;
+						const { x, y, k } = transform;
+
+						// then, update the zoom behavior's internal translation, so that
+						// it knows how to properly manipulate it on the next movement
+						// and finally, update the <g> element's transform attribute with the
+						// correct translation and scale (in reverse order)
+						g.attr("transform", `translate(${x}, ${y}), scale(${k})`);
+					});
+
+				// then, call the zoom behavior on the svg element, which will add
+				// all of the necessary mouse and touch event handlers.
+				// remember that if you call this on the <g> element, the even handlers
+				// will only trigger when the mouse or touch cursor intersects with the
+				// <g> elements' children!
+				svg.call(zoom);
+			});
+		</script>
+	</body>
+</html>
