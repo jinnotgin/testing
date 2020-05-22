@@ -139,8 +139,6 @@
 				g = svg.append("g");
 
 			// then we add the image in
-			const imgFullSize = {};
-			let zoom;
 			getImageSize(imgAddress).then((imgFullSize) => {
 				console.log({ imgFullSize });
 				// determine how much to downscale by, if needed (using maxScale)
@@ -193,7 +191,7 @@
 				});
 
 				// then, create the zoom behvavior
-				zoom = d3
+				const zoom = d3
 					.zoom()
 					// only scale up, e.g. between 1x and maxScale
 					.scaleExtent([1, maxScale])
