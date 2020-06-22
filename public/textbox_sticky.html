@@ -56,6 +56,7 @@
 			<p>Lorem ipsum, bamboozle.</p>
 			<p>Lorem ipsum, bamboozle.</p>
 			<p>Lorem ipsum, bamboozle.</p>
+			<div id="editComment" class="button">Edit Comment</div>
 			<p>Lorem ipsum, bamboozle.</p>
 			<p>Lorem ipsum, bamboozle.</p>
 			<p>Lorem ipsum, bamboozle.</p>
@@ -101,6 +102,7 @@
 			const $addNewComment = document.querySelector("#addNewComment");
 			const $closeCommentEditor = document.querySelector("#closeCommentEditor");
 			const $commentEditor = document.querySelector("#commentEditor");
+			const $editComment = document.querySelector("#editComment");
 
 			$addNewComment.onclick = () => {
 				$addNewComment.style.display = "none";
@@ -110,13 +112,16 @@
 					block: "end",
 					inline: "nearest",
 				});*/
-				document
-					.getElementById("app")
-					.scrollIntoView({
-						behavior: "smooth",
-						block: "end",
-						inline: "nearest",
-					});
+				document.getElementById("app").scrollIntoView({
+					behavior: "smooth",
+					block: "end",
+					inline: "nearest",
+				});
+			};
+
+			$editComment.onclick = () => {
+				$addNewComment.style.display = "none";
+				$commentEditor.style.display = "block";
 			};
 
 			$closeCommentEditor.onclick = () => {
