@@ -105,11 +105,18 @@
 			$addNewComment.onclick = () => {
 				$addNewComment.style.display = "none";
 				$commentEditor.style.display = "block";
-				$commentEditor.scrollIntoView({
+				/*$commentEditor.scrollIntoView({
 					behavior: "smooth",
 					block: "end",
 					inline: "nearest",
-				});
+				});*/
+				document
+					.getElementById("app")
+					.scrollIntoView({
+						behavior: "smooth",
+						block: "end",
+						inline: "nearest",
+					});
 			};
 
 			$closeCommentEditor.onclick = () => {
