@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Drawer Flex</title>
+<style>
+    body {
+  padding: 0;
+  margin: 0;
+}
+
+.page-drawer-layout {
+  display: flex;
+  color: white;
+}
+.padding {
+  flex-grow: 1;
+}
+.page {
+  background: red;
+  flex-basis: 640px;
+  overflow: scroll;
+}
+.drawer {
+  background: green;
+  flex-basis: 200px;
+  overflow: scroll;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  height: 0px;
+  width: 100%;
+  transition: height 0.15s ease-out;
+}
+.drawer.expanded {
+  height: 200px;
+}
+.card {
+  border: 1px solid white;
+  padding: 0.5em;
+  margin: 15px;
+  height: 100px;
+  min-height: 100px;
+  width: 150px;
+  min-width: 150px;
+}
+
+@media only screen and (min-width: 900px) {
+  /* For desktop: */
+  .page-drawer-layout {
+    height: calc(100vh - 100px);
+  }
+  .drawer {
+    position: unset;
+    height: unset;
+    flex-direction: column;
+  }
+  .drawer.expanded {
+    height: unset;
+  }
+}
+</style>
+</head>
+<body>
+    <p> Click on red to toggle drawer in mobile! </p>
+    <div class="page-drawer-layout">
+      <div class="padding"></div>
+      <div class="page">
+        Something <br>
+      </div>
+      
+     <div class="drawer">
+       <div class="card">Card content</div>
+      </div>
+      <div class="padding"></div>
+    </div>
+    
+    <p> Footer stuff. </p>
+
+    <script>
+        document.querySelector('.page').innerHTML = document.querySelector('.page').innerHTML.repeat(100)
+document.querySelector('.page').onclick = () => {
+ document.querySelector('.drawer').classList.toggle('expanded')
+};
+
+document.querySelector('.drawer').innerHTML = document.querySelector('.drawer').innerHTML.repeat(25)
+    </script>
+</body>
+</html>>
