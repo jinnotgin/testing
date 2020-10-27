@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta
+			name="viewport"
+			content="width=device-width, initial-scale=1"
+		/>
+
+		<style>
+			#app {
+				background: rgb(250, 250, 250);
+				padding: 0.5em;
+			}
+
+			.contentSticky {
+				position: sticky;
+				position: -webkit-sticky;
+				position: -moz-sticky;
+				position: -o-sticky;
+				position: -ms-sticky;
+				position: sticky;
+				bottom: 0;
+			}
+
+			.flexColumn {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.button {
+				padding: 1em;
+				margin: 0.25em;
+				background: darkblue;
+				color: white;
+				width: 200px;
+				cursor: pointer;
+				user-select: none;
+			}
+
+			#commentInput {
+				width: 100%;
+				height: 100px;
+			}
+
+			#commentEditor {
+				display: none;
+				border: 1px solid black;
+				padding: 1em;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div id="app">
+			<p><strong>START OF PAGE</strong></p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<input />
+			<div id="editComment" class="button">Edit Comment</div>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p>Lorem ipsum, bamboozle.</p>
+			<p><strong>END OF PAGE</strong></p>
+
+			<div class="contentSticky">
+				<div class="flexColumn">
+					<div class="button doNothingButton">Show New Comments</div>
+					<div id="addNewComment" class="button">Add New Comment</div>
+				</div>
+
+				<div id="commentEditor">
+					<div id="closeCommentEditor" class="button">Close Comment Editor</div>
+					<textarea id="commentInput"></textarea>
+					<div class="button doNothingButton">Save Comment</div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+			const $addNewComment = document.querySelector("#addNewComment");
+			const $closeCommentEditor = document.querySelector("#closeCommentEditor");
+			const $commentEditor = document.querySelector("#commentEditor");
+			const $editComment = document.querySelector("#editComment");
+
+			$addNewComment.onclick = () => {
+				$addNewComment.style.display = "none";
+				$commentEditor.style.display = "block";
+				/*$commentEditor.scrollIntoView({
+					behavior: "smooth",
+					block: "end",
+					inline: "nearest",
+				});*/
+				document.getElementById("app").scrollIntoView({
+					behavior: "smooth",
+					block: "end",
+					inline: "nearest",
+				});
+			};
+
+			$editComment.onclick = () => {
+				$addNewComment.style.display = "none";
+				$commentEditor.style.display = "block";
+			};
+
+			$closeCommentEditor.onclick = () => {
+				$addNewComment.style.display = "block";
+				$commentEditor.style.display = "none";
+			};
+
+			[...document.querySelectorAll(".doNothingButton")].map((domNode) => {
+				domNode.onclick = () => {
+					alert("LOL this doesn't work.");
+				};
+			});
+		</script>
+	</body>
+</html>
